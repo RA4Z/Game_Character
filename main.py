@@ -39,7 +39,8 @@ class Player:
             "thirst": 100,
             "sleep": 100,
             "sanity": 100,
-            "hp": 100
+            "hp": 100,
+            "pain": 0
         }
 
         self.experience_points = {
@@ -119,6 +120,7 @@ class Player:
 
             self.needs["hp"] = min(100, self.needs["hp"])  # Impede que as necessidades ultrapassem 100
             self.needs["sanity"] = min(100, self.needs["sanity"])  # Impede que as necessidades ultrapassem 100
+            self.calculate_pain_level()
 
             for member, decay_rate in self.body_decay_rate.items():
                 self.body[member] += decay_rate
@@ -165,6 +167,9 @@ class Player:
             energy_key = f"{part}_energy"
             if self.body[energy_key] <= 0:
                 self.body[bone_hp] -= 5
+
+    def calculate_pain_level(self):
+        pass
 
     def sleep(self, time_passed):
         self.needs["sleep"] += time_passed * 13
