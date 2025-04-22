@@ -67,10 +67,10 @@ class Player:
 
     def verify_player_status(self):
         if self.needs["hp"] <= 0:
-            print('Fazer funcionalidade de Game Over')
+            return 'death'
 
         if self.needs["sleep"] <= 0:
-            print('Fazer funcionalidade de desmaio')
+            return 'tired'
 
     def update_body_decay_info(self):
         return {
