@@ -32,7 +32,6 @@ class Player:
             "back_bone_hp": 100,
         }
         self.body_decay_rate = self.update_body_decay_info()
-
         self.needs = {
             # Necessidades básicas do jogo
             "hunger": 100,
@@ -42,7 +41,6 @@ class Player:
             "hp": 100,
             "pain": 0
         }
-
         self.experience_points = {
             # Quantidade de pontos de experiência atual e para o próximo nível
             "strength_next_level": (self.stats["strength"] + 1) * 10,
@@ -51,7 +49,6 @@ class Player:
             "intelligence_next_level": (self.stats["intelligence"] + 1) * 10,
             "intelligence_xp": 0,
         }
-
         self.needs_decay_rate = {
             # Taxa de decaimento por hora no jogo
             "hunger": -3,
@@ -67,6 +64,13 @@ class Player:
             self.experience_points[f"{skill}_xp"] = self.experience_points[f"{skill}_xp"] - self.experience_points[f"{skill}_next_level"]
             self.stats[skill] += 1
             self.experience_points[f"{skill}_next_level"] = (self.stats[skill] + 1) * 10
+
+    def verify_player_status(self):
+        if self.needs["hp"] <= 0:
+            print('Fazer funcionalidade de Game Over')
+
+        if self.needs["sleep"] <= 0:
+            print('Fazer funcionalidade de desmaio')
 
     def update_body_decay_info(self):
         return {
@@ -120,12 +124,13 @@ class Player:
 
             self.needs["hp"] = min(100, self.needs["hp"])  # Impede que as necessidades ultrapassem 100
             self.needs["sanity"] = min(100, self.needs["sanity"])  # Impede que as necessidades ultrapassem 100
-            self.calculate_pain_level()
 
             for member, decay_rate in self.body_decay_rate.items():
                 self.body[member] += decay_rate
                 self.body[member] = max(0, self.body[member])  # Impede que as necessidades fiquem negativas
                 self.body[member] = min(100, self.body[member])  # Impede que as necessidades ultrapassem 100
+
+            self.verify_player_status()
 
     def consume_item(self, item):  # lógica para consumir itens (comida, água)
         if item in self.inventory:
@@ -168,9 +173,6 @@ class Player:
             if self.body[energy_key] <= 0:
                 self.body[bone_hp] -= 5
 
-    def calculate_pain_level(self):
-        pass
-
     def sleep(self, time_passed):
         self.needs["sleep"] += time_passed * 13
         self.needs["sleep"] = min(100, self.needs["sleep"])
@@ -182,8 +184,7 @@ class Player:
 
 if __name__ == '__main__':
     player = Player('Robert')
-    player.physical_exercises(16)
-    player.sleep(3)
+    player.physical_exercises(48)
 
     print(player.body)
     print(player.needs)
